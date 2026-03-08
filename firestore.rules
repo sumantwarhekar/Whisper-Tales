@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── sessions collection ────────────────────────────────────────────────
+    // All writes go through the server-side Next.js API routes using Firebase
+    // Admin SDK, which bypasses these rules entirely.
+    // Direct client reads are blocked — session IDs are UUIDs (unguessable)
+    // but we enforce it here too for defense in depth.
+    match /sessions/{sessionId} {
+      // Disallow direct client writes — Admin SDK handles all mutations
+      allow write: if false;
+
+      // Allow direct client reads only for archived (shareable) sessions.
+      // This lets the share URL work without a server round-trip.
+      allow read: if resource.data.status == "archive";
+    }
+
+    // ── _meta collection ──────────────────────────────────────────────────
+    // Schema documentation — read-only for everyone, writes via Admin SDK only
+    match /_meta/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── Deny everything else ─────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
