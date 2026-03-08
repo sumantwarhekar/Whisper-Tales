@@ -1,5 +1,10 @@
 # Whisper Tales
 
+Team LMNT:
+Team Members:
+1. Sumant Warhekar
+2. Aashutosh Kumar
+
 > *An AI-powered interactive gothic fiction engine — where your choices, flaws, and desires shape a unique dark narrative, illustrated and scored in real time.*
 
 ---
